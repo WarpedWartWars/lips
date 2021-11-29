@@ -7229,8 +7229,9 @@ var global_env = new Environment({
         });
     }), `(set! name value)
 
-            Macro that can be used to set the value of the variable (mutate)
-            it search the scope chain until it finds first non emtpy slot and set it.`),
+            This is a macro that can be used to set the value of the
+            variable. It searches the scope chain until it finds the
+            first non-empty slot and then sets it.`),
     // ------------------------------------------------------------------
     'unset!': doc(new Macro('set!', function(code) {
         if (!(code.car instanceof LSymbol)) {
@@ -7244,36 +7245,41 @@ var global_env = new Environment({
         }
     }), `(unset! name)
 
-            Function delete specified name from environment.`),
+            This function deletes the specified name from the
+            environment.`),
     // ------------------------------------------------------------------
     'set-car!': doc('set-car!', function(slot, value) {
         typecheck('set-car!', slot, 'pair');
         slot.car = value;
     }, `(set-car! obj value)
 
-            Function that set car (head) of the list/pair to specified value.
-            It can destroy the list. Old value is lost.`),
+            This function sets the car (item 1) of the list to the
+            specified value. It can destroy the list. The old value is
+            lost.`),
     // ------------------------------------------------------------------
     'set-cdr!': doc('set-cdr!', function(slot, value) {
         typecheck('set-cdr!', slot, 'pair');
         slot.cdr = value;
     }, `(set-cdr! obj value)
 
-            Function that set cdr (tail) of the list/pair to specified value.
-            It can destroy the list. Old value is lost.`),
+            This function sets the cdr (all but first) of the list to the
+            specified value. It can destroy the list. The old value is
+            lost.`),
     // ------------------------------------------------------------------
     'empty?': doc('empty?', function(x) {
         return typeof x === 'undefined' || x === nil;
     }, `(empty? object)
 
-            Function return true if value is undfined empty list.`),
+            This function returns true if the value is undefined or an
+            empty list.`),
     // ------------------------------------------------------------------
     gensym: doc(
         'gensym',
         gensym,
         `(gensym)
 
-             Function generate unique symbol, to use with macros as meta name.`),
+             This function generates a unique symbol, to use with macros
+             as a meta name.`),
     // ------------------------------------------------------------------
     load: doc('load', function load(file, env) {
         typecheck('load', file, 'string');
@@ -7371,9 +7377,10 @@ var global_env = new Environment({
     }, `(load filename)
             (load filename environment)
 
-            Function fetch the file and evaluate its content as LIPS code,
-            If second argument is provided and it's environment the evaluation
-            will happen in that environment.`),
+            This function fetches the file and evaluates its content as
+            LIPS code. If the second input is provided and it's an
+            environment, then the evaluation will happen in that
+            environment.`),
     // ------------------------------------------------------------------
     'do': doc(new Macro('do', async function(code, { dynamic_scope, error }) {
         var self = this;
@@ -7419,11 +7426,13 @@ var global_env = new Environment({
         }
     }), `(do ((<var> <init> <next>)) (test expression) . body)
 
-             Iteration macro that evaluate the expression body in scope of the variables.
-             On Eeach loop it increase the variables according to next expression and run
-             test to check if the loop should continue. If test is signle call the macro
-             will not return anything. If the test is pair of expression and value the
-             macro will return that value after finish.`),
+             This is an iteration macro that evaluates the expression
+             body in the scope of the variables. On each loop it
+             increases the variables according to next expression and
+             runs a test to check if the loop should continue. If the
+             test is a single call, the macro will not return anything.
+             If the test is an expression and value, the macro will
+             return that value after it finishes.`),
     // ------------------------------------------------------------------
     'if': doc(new Macro('if', function(code, { dynamic_scope, error }) {
         if (dynamic_scope) {
@@ -7450,11 +7459,11 @@ var global_env = new Environment({
         }
         var cond = evaluate(code.car, { env, dynamic_scope, error });
         return unpromise(cond, resolve);
-    }), `(if cond true-expr false-expr)
+    }), `(if cond truth-expr non-truth-expr)
 
-            Macro evaluate condition expression and if the value is true, it
-            evaluate and return true expression if not it evaluate and return
-            false expression`),
+            This macro evaluates the condition. If the value is truthy,
+            it evaluates and returns the truth expression, but if not, it
+            evaluates and returns the non-truth expression.`),
     // ------------------------------------------------------------------
     'let-env': new Macro('let-env', function(code, options = {}) {
         const { dynamic_scope, error } = options;
